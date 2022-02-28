@@ -1,4 +1,42 @@
-export default function Profile() {
+import React , { Component } from 'react'
+import axios from 'axios'
+import { Navigate } from "react-router-dom";
+
+class Profile extends Component{
+
+   constructor(props){
+        super(props);
+        this.state= {
+	    submitted: '',
+	    formData: {
+	            name:'',
+		    username:'',
+		    about:'',
+	            websiteLink:''
+	    }
+        }
+    }
+
+    handleHtmlControlChange = (event) => {
+        this.setState({formData: {[event.target.name]:event.target.value}});
+    }
+
+    handleSubmit  = (event) => {
+        console.log(this.state);
+        event.preventDefault();
+        axios.post('http://localhost:8080/profile', this.state.formData).
+        then( response => {
+            console.log(response);
+	    if (response.status == 201) {
+		this.setState({submitted: 'true'});
+	    }
+        }).catch( error => {
+            console.log(error)
+        })
+    }
+
+  render(){
+  const {submitted, formData} = this.state;
   return (
     <>
       {/*
@@ -19,9 +57,26 @@ export default function Profile() {
             />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Complete your profile</h2>
           </div>
-          <form className="mt-8 space-y-6" action="#" method="POST">
-            <input type="hidden" name="remember" defaultValue="true" />
+	  {submitted=='true' && (
+            <Navigate to="/home" replace={true} />
+          )}
+          <form className="mt-8 space-y-6" onSubmit={this.handleSubmit}>
             <div className="rounded-md shadow-sm -space-y-px">
+	      <div>
+                <label htmlFor="username" className="sr-only">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  name="username"
+                  type="username"
+                  autoComplete="Username"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Username"
+		  onChange={this.handleHtmlControlChange}
+                />
+              </div>	
               <div>
                 <label htmlFor="name" className="sr-only">
                   Name
@@ -34,20 +89,7 @@ export default function Profile() {
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Name"
-                />
-              </div>
-              <div>
-                <label htmlFor="link" className="sr-only">
-                  Gift Me a Book link
-                </label>
-                <input
-                  id="link"
-                  name="link"
-                  type="link"
-                  autoComplete="link"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Gift Me a Book link"
+		  onChange={this.handleHtmlControlChange}
                 />
               </div>
 	      <div>
@@ -62,6 +104,7 @@ export default function Profile() {
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="About"
+		  onChange={this.handleHtmlControlChange}
                 />
               </div>
 	      <div>
@@ -69,13 +112,14 @@ export default function Profile() {
                   Social or Website link
                 </label>
                 <input
-                  id="social"
-                  name="social"
-                  type="social"
-                  autoComplete="social"
+                  id="websiteLink"
+                  name="websiteLink"
+                  type="websiteLink"
+                  autoComplete="websiteLink"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Social or Website link"
+		  onChange={this.handleHtmlControlChange}
                 />
               </div>	
             </div>
@@ -92,6 +136,8 @@ export default function Profile() {
         </div>
       </div>
     </>
-  )
+  )}
 }
+
+export default Profile;
 

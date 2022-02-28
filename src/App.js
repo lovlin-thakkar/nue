@@ -7,6 +7,7 @@ import {
   Route
 } from "react-router-dom";
 import Profile from './Profile.js';
+import Home from './Home.js';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
 	    <Routes>
 	      <Route path="/" element={<Hero />}/>
 	        <Route path="profile" element={<Profile />}/>
+		<Route path="home" element={<Home />}/>
 	    </Routes>
 	</BrowserRouter>
   );
